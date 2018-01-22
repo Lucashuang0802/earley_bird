@@ -6,7 +6,7 @@ import sys
 from grammar import *
 from sentence import *
 from parser import *
-from parse_trees import *
+# from parse_trees import *
 
 def run():
     if len(sys.argv)<3:
@@ -22,6 +22,7 @@ def run():
 
     # parse input sentence
     sentence = Sentence.from_string(sys.argv[2])
+    print(sentence)
 
     # debug flag
     debug = len(sys.argv)==4 and sys.argv[3] == '--debug'
@@ -34,9 +35,9 @@ def run():
     if earley.is_valid_sentence():
         print '==> Sentence is valid.'
 
-        trees = ParseTrees(earley)
-        print 'Valid parse trees:'
-        print trees
+        # trees = ParseTrees(earley)
+        # print 'Valid parse trees:'
+        # print trees
     else:
         print '==> Sentence is invalid.'
 

@@ -33,6 +33,7 @@ class Parser:
         word = self.sentence[position-1]
         if word:
             rules = [Rule(tag, [word.word]) for tag in word.tags]
+            print(rules)
             for rule in rules:
                 chart.add_row(ChartRow(rule, 1, position-1))
 
