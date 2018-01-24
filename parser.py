@@ -8,11 +8,10 @@ from grammar import *
 class Parser:
     GAMMA_SYMBOL = 'GAMMA'
 
-    def __init__(self, grammar, sentence, debug=False):
+    def __init__(self, grammar, sentence):
         '''Initialize parser with grammar and sentence'''
         self.grammar = grammar
         self.sentence = sentence
-        self.debug = debug
 
         # prepare a chart for every input word
         self.charts = [Chart([]) for i in range(len(self)+1)]
@@ -33,7 +32,6 @@ class Parser:
         word = self.sentence[position-1]
         if word:
             rules = [Rule(tag, [word.word]) for tag in word.tags]
-            print(rules)
             for rule in rules:
                 chart.add_row(ChartRow(rule, 1, position-1))
 
@@ -82,13 +80,12 @@ class Parser:
 
             i+= 1
 
-        # finally, print charts for debuggers
-        if self.debug:
-            print "Parsing charts:"
-            for i in range(len(self.charts)):
-                print "-----------{0}-------------".format(i)
-                print self.charts[i]
-                print "-------------------------".format(i)
+        # finally, print charts
+        print "Parsing charts:"
+        for i in range(len(self.charts)):
+            print "-----------{0}-------------".format(i)
+            print self.charts[i]
+            print "-------------------------".format(i)
 
     def is_valid_sentence(self):
         '''Returns true if sentence has a complete parse tree'''

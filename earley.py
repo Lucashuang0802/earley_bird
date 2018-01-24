@@ -28,16 +28,12 @@ def run():
     debug = len(sys.argv)==4 and sys.argv[3] == '--debug'
 
     # run parser
-    earley = Parser(grammar, sentence, debug)
+    earley = Parser(grammar, sentence)
     earley.parse()
 
     # output sentence validity
     if earley.is_valid_sentence():
         print '==> Sentence is valid.'
-
-        # trees = ParseTrees(earley)
-        # print 'Valid parse trees:'
-        # print trees
     else:
         print '==> Sentence is invalid.'
 
