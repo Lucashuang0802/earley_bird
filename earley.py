@@ -4,7 +4,6 @@
 
 import sys
 import re
-from grammar import *
 from sentence import *
 from parser import *
 from optparse import OptionParser
@@ -33,7 +32,7 @@ def run():
         # provide option command line argument
         parser = OptionParser()
         parser.add_option("-f", "--file", action="store", dest="filename", help="indicate the file name", metavar="FILE")
-        options, args = parser.parse_args()
+        options, _ = parser.parse_args()
 
         # either get the file name from -f option or standard input
         filename = None

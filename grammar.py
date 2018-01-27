@@ -23,7 +23,7 @@ class Rule:
         '''Return a member of the RHS'''
         return self.rhs[item]
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
         '''Rules are equal iff both their sides are equal'''
         if self.lhs == other.lhs:
             if self.rhs == other.rhs:

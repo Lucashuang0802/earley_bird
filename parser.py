@@ -24,7 +24,7 @@ class Parser:
     def init_first_chart(self):
         print('init_first_chart')
         '''Add initial Gamma rule to first chart'''
-        row = ChartRow(Rule(Parser.GAMMA_SYMBOL, ['S']), 0, 0, stateName='Dummy start state')
+        row = ChartRow(Rule(Parser.GAMMA_SYMBOL, ['S']), 0, 0, state_name='Dummy start state')
         self.charts[0].add_row(row)
 
     def prescan(self, chart, position):
@@ -34,7 +34,7 @@ class Parser:
         if word:
             rules = [Rule(tag, [word.word]) for tag in word.tags]
             for rule in rules:
-                chart.add_row(ChartRow(rule, 1, position-1, stateName='Scanner'))
+                chart.add_row(ChartRow(rule, 1, position-1, state_name='Scanner'))
 
     def predict(self, chart, position):
         '''Predict next parse by looking up grammar rules
@@ -44,7 +44,7 @@ class Parser:
             rules = self.grammar[next_cat]
             if rules:
                 for rule in rules:
-                    new = ChartRow(rule, 0, position, stateName='Predictor')
+                    new = ChartRow(rule, 0, position, state_name='Predictor')
                     chart.add_row(new)
 
     def complete(self, chart, position):
@@ -55,7 +55,7 @@ class Parser:
                 completed = row.rule.lhs
                 for r in self.charts[row.start].rows:
                     if completed == r.next_category():
-                        new = ChartRow(r.rule, r.dot+1, r.start, r, row, stateName="Completer")
+                        new = ChartRow(r.rule, r.dot+1, r.start, r, row, state_name="Completer")
                         chart.add_row(new)
 
     def parse(self):
@@ -93,7 +93,7 @@ class Parser:
                 rhs = list(row.rule.rhs)
                 rhs.insert(row.dot, '.')
                 rule_str = "{0} -> {1}".format(row.rule.lhs, ' '.join(rhs))
-                row_result = "{0}\t\t\t[{1} {2}]\t{3}".format(rule_str, row.start, i, row.stateName)
+                row_result = "{0}\t\t\t[{1} {2}]\t{3}".format(rule_str, row.start, i, row.state_name)
                 if j == 0:
                     print("Chart[{0}] S{1} {2}".format(i, str(line_number), row_result))
                 else:

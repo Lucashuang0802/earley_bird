@@ -21,7 +21,7 @@ class Chart:
             self.rows.append(row)
 
 class ChartRow:
-    def __init__(self, rule, dot=0, start=0, previous=None, completing=None, stateName=None):
+    def __init__(self, rule, dot=0, start=0, previous=None, completing=None, state_name=None):
         '''Initialize a chart row, consisting of a rule, a position
            index inside the rule, index of starting chart and
            pointers to parent rows'''
@@ -30,7 +30,7 @@ class ChartRow:
         self.start = start
         self.completing = completing
         self.previous = previous
-        self.stateName = stateName
+        self.state_name = state_name
 
     def __len__(self):
         '''A chart's length is its rule's length'''
@@ -41,9 +41,9 @@ class ChartRow:
         rhs = list(self.rule.rhs)
         rhs.insert(self.dot, '.')
         rule_str = "{0} -> {1}".format(self.rule.lhs, ' '.join(rhs))
-        return "{0} {1} \t\t{2}".format(rule_str, self.start, self.stateName)
+        return "{0} {1} \t\t{2}".format(rule_str, self.start, self.state_name)
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
         '''Two rows are equal if they share the same rule, start and dot'''
         if len(self) == len(other):
             if self.dot == other.dot:
@@ -67,4 +67,3 @@ class ChartRow:
         if self.dot > 0:
             return self.rule[self.dot-1]
         return None
-
