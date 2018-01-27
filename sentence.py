@@ -2,6 +2,8 @@
 # coding=utf-8
 # -*- encoding: utf-8 -*-
 import re
+import sys
+from nltk.stem.porter import *
 
 class Word:
     def __init__(self, word = '', tags = []):
@@ -38,24 +40,27 @@ class Sentence:
         self.words.append(word)
 
     @staticmethod
-    def from_string(text):
+    def from_file(content, grammar):
         '''Create a Sentence object from a given string in the Apertium
            stream format:
               time/time<N> flies/flies<N>/flies<V> like/like<P>/like<V>
               an/an<D> arrow/arrow<N>'''
-        #TODO handle Apertium format's beginning ^ and ending $ symbols
-
-        # prepare regular expressions to find word and tags
-        lemmarex = re.compile('^[^\/]*')
-        tagsrex = re.compile('\/[^\<]*\<([^\>]*)\>')
-
+        sentence_finder = re.search('W\s*=\s*([a-zA-Z -]*)\.$', content)
+        if sentence_finder is None:
+            print("Possibly missing the sentence to parse")
+            sys.exit()
+        sentence = sentence_finder.group(1).strip()   
+        words = sentence.split(' ')
+        stemmer = PorterStemmer()
         sentence = Sentence()
-        words = text.strip().split(' ')
+
         for word in words:
-            lemma = lemmarex.match(word).group(0)
-            tags = tagsrex.findall(word)
-            w = Word(lemma, tags)
-            sentence.add_word(w)
-
+            tags = []
+            for key in grammar.rules:
+                rules = grammar[key]
+                for rule in rules:
+                    if stemmer.stem(word) in rule.rhs:
+                        tags.append(key)
+            sentence.add_word(Word(word, tags))
         return sentence
-
+    

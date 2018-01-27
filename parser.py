@@ -22,8 +22,9 @@ class Parser:
         return len(self.sentence)
 
     def init_first_chart(self):
+        print('init_first_chart')
         '''Add initial Gamma rule to first chart'''
-        row = ChartRow(Rule(Parser.GAMMA_SYMBOL, ['S']), 0, 0)
+        row = ChartRow(Rule(Parser.GAMMA_SYMBOL, ['S']), 0, 0, stateName='Dummy start state')
         self.charts[0].add_row(row)
 
     def prescan(self, chart, position):
@@ -33,7 +34,7 @@ class Parser:
         if word:
             rules = [Rule(tag, [word.word]) for tag in word.tags]
             for rule in rules:
-                chart.add_row(ChartRow(rule, 1, position-1))
+                chart.add_row(ChartRow(rule, 1, position-1, stateName='Scanner'))
 
     def predict(self, chart, position):
         '''Predict next parse by looking up grammar rules
@@ -43,7 +44,7 @@ class Parser:
             rules = self.grammar[next_cat]
             if rules:
                 for rule in rules:
-                    new = ChartRow(rule, 0, position)
+                    new = ChartRow(rule, 0, position, stateName='Predictor')
                     chart.add_row(new)
 
     def complete(self, chart, position):
@@ -54,7 +55,7 @@ class Parser:
                 completed = row.rule.lhs
                 for r in self.charts[row.start].rows:
                     if completed == r.next_category():
-                        new = ChartRow(r.rule, r.dot+1, r.start, r, row)
+                        new = ChartRow(r.rule, r.dot+1, r.start, r, row, stateName="Completer")
                         chart.add_row(new)
 
     def parse(self):
@@ -81,11 +82,23 @@ class Parser:
             i+= 1
 
         # finally, print charts
-        print "Parsing charts:"
+        print("Parsing charts:")
+        line_number = 0
         for i in range(len(self.charts)):
-            print "-----------{0}-------------".format(i)
-            print self.charts[i]
-            print "-------------------------".format(i)
+            rows = self.charts[i]
+            for j in range(len(rows)):
+                row = rows[j]
+
+                # row
+                rhs = list(row.rule.rhs)
+                rhs.insert(row.dot, '.')
+                rule_str = "{0} -> {1}".format(row.rule.lhs, ' '.join(rhs))
+                row_result = "{0}\t\t\t[{1} {2}]\t{3}".format(rule_str, row.start, i, row.stateName)
+                if j == 0:
+                    print("Chart[{0}] S{1} {2}".format(i, str(line_number), row_result))
+                else:
+                    print("\tS{0} {1}".format(str(line_number), row_result))
+                line_number += 1
 
     def is_valid_sentence(self):
         '''Returns true if sentence has a complete parse tree'''

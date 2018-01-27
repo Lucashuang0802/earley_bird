@@ -1,8 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 # -*- encoding: utf-8 -*-
 
 import sys
+from validator import *
 
 class Rule:
     def __init__(self, lhs, rhs):
@@ -39,8 +40,8 @@ class Grammar:
         st = '<Grammar>\n'
         for group in self.rules.values():
             for rule in group:
-                st+= '\t{0}\n'.format(str(rule))
-        st+= '</Grammar>'
+                st += '\t{0}\n'.format(str(rule))
+        st += '</Grammar>'
         return st
 
     def __getitem__(self, lhs):
@@ -58,20 +59,28 @@ class Grammar:
         else:
             self.rules[lhs] = [rule]
 
+    def trim_terminal_rules(self):
+        # data pre-processing step 3: suppress the grammar
+        terminal_lhs = ['Aux', 'Det', 'Pronoun', 'Proper-Noun', 'Noun', 'Verb', 'Prep']
+        for k in list(self.rules.keys()):
+            if k in terminal_lhs:
+                del self.rules[k]
+
     @staticmethod
-    def from_file(filename):
+    def from_file(file_content):
         '''Returns a Grammar instance created from a text file.
            The file lines should have the format:
-               lhs -> outcome | outcome | outcome'''
+               lhs : outcome | outcome | outcome'''
+
+        lines = []
+        for element in file_content.split(';'):
+            if Validator.validate_grammar(element.strip()):
+                trim_str = element.replace('\t', ' ').replace('\n', '')
+                lines.append(trim_str)
 
         grammar = Grammar()
-        for line in open(filename):
-            # ignore comments
-            line = line[0:line.find('#')]
-            if len(line) < 3:
-                continue
-
-            rule = line.split('->')
+        for line in lines:
+            rule = line.split(':')
             lhs = rule[0].strip()
             for outcome in rule[1].split('|'):
                 rhs = outcome.strip()
@@ -80,4 +89,3 @@ class Grammar:
                 grammar.add_rule(r)
 
         return grammar
-

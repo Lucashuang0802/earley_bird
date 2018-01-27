@@ -11,20 +11,17 @@ class Chart:
         '''Chart length'''
         return len(self.rows)
 
-    def __repr__(self):
-        '''Nice string representation'''
-        st = '<Chart>\n\t'
-        st+= '\n\t'.join(str(r) for r in self.rows)
-        st+= '\n</Chart>'
-        return st
+    def __getitem__(self, index):
+        '''Return a chart row of the chart'''
+        return self.rows[index]
 
     def add_row(self, row):
         '''Add a row to chart, only if wasn't already there'''
-        if not row in self.rows:
+        if row not in self.rows:
             self.rows.append(row)
 
 class ChartRow:
-    def __init__(self, rule, dot=0, start=0, previous=None, completing=None):
+    def __init__(self, rule, dot=0, start=0, previous=None, completing=None, stateName=None):
         '''Initialize a chart row, consisting of a rule, a position
            index inside the rule, index of starting chart and
            pointers to parent rows'''
@@ -33,18 +30,18 @@ class ChartRow:
         self.start = start
         self.completing = completing
         self.previous = previous
+        self.stateName = stateName
 
     def __len__(self):
         '''A chart's length is its rule's length'''
         return len(self.rule)
 
     def __repr__(self):
-        '''Nice string representation:
-            <Row <LHS -> RHS .> [start]>'''
+        '''Nice string representation:'''
         rhs = list(self.rule.rhs)
         rhs.insert(self.dot, '.')
-        rule_str = "[{0} -> {1}]".format(self.rule.lhs, ' '.join(rhs))
-        return "<Row {0} [{1}]>".format(rule_str, self.start)
+        rule_str = "{0} -> {1}".format(self.rule.lhs, ' '.join(rhs))
+        return "{0} {1} \t\t{2}".format(rule_str, self.start, self.stateName)
 
     def __cmp__(self, other):
         '''Two rows are equal if they share the same rule, start and dot'''
