@@ -31,7 +31,11 @@ class Stemmer:
         stemmer = PorterStemmer()
 
         for line in file_reader:
-            parsed_line = re.findall(r"[\w']+|[.,!?;#|:]", line.replace("\t", ' ').replace("\n", ' '))
+            line = line.replace("\t", ' ').replace("\n", ' ')
+            if re.findall(r'W\s*=\s*', line):
+                parsed_line = re.findall(r"[\w']+|[.,!?;#|:]", line.replace("\t", ' ').replace("\n", ' '))
+            else:
+                parsed_line = line.replace("\t", ' ').replace("\n", ' ').split(' ')
             parsed_line = filter(None, parsed_line)
             for token in parsed_line:
                 if isint(token):
