@@ -31,13 +31,13 @@ class Stemmer:
         stemmer = PorterStemmer()
 
         for line in file_reader:
-            parsed_line = re.findall(r"[\w']+|[.,!?;#]", line.replace("\t", ' ').replace("\n", ' '))
+            parsed_line = re.findall(r"[\w']+|[.,!?;#|:]", line.replace("\t", ' ').replace("\n", ' '))
             parsed_line = filter(None, parsed_line)
             for token in parsed_line:
-                if isfloat(token):
-                    result.append(token + ' DOUBLE ' + str(line_num))
-                elif isint(token):
+                if isint(token):
                     result.append(token + ' INT ' + str(line_num))
+                elif isfloat(token):
+                    result.append(token + ' DOUBLE ' + str(line_num))
                 elif token in set(string.punctuation):
                     result.append(token + ' OP ' + str(line_num))
                 else:

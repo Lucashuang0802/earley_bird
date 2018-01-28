@@ -91,11 +91,11 @@ class Parser:
                 rhs = list(row.rule.rhs)
                 rhs.insert(row.dot, '.')
                 rule_str = "{0} -> {1}".format(row.rule.lhs, ' '.join(rhs))
-                row_result = "{0}\t\t\t[{1},{2}]\t{3}".format(rule_str, row.start, i, row.state_name)
+                row_result = "{:20s}\t[{:1d},{:2d}]\t{:12s}".format(rule_str, row.start, i, row.state_name)
                 if j == 0:
-                    print("Chart[{0}] S{1} {2}".format(i, str(line_number), row_result))
+                    print("Chart[{:1d}] S{:1d} {:20s}".format(i, line_number, row_result))
                 else:
-                    print("\tS{0} {1}".format(str(line_number), row_result))
+                    print("\tS{:02d} {:20s}".format(line_number, row_result))
                 line_number += 1
 
     def is_valid_sentence(self):

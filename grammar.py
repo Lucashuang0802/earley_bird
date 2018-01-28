@@ -2,7 +2,6 @@
 # coding=utf-8
 # -*- encoding: utf-8 -*-
 
-import sys
 from validator import *
 
 class Rule:
@@ -37,12 +36,12 @@ class Grammar:
 
     def __repr__(self):
         '''Nice string representation'''
-        st = '<Grammar>\n'
+        result = '<Grammar>\n'
         for group in self.rules.values():
             for rule in group:
-                st += '\t{0}\n'.format(str(rule))
-        st += '</Grammar>'
-        return st
+                result += '\t{0}\n'.format(str(rule))
+        result += '</Grammar>'
+        return result
 
     def __getitem__(self, lhs):
         '''Return rules for a given LHS'''
@@ -60,7 +59,7 @@ class Grammar:
             self.rules[lhs] = [rule]
 
     def trim_terminal_rules(self):
-        # data pre-processing step 3: suppress the grammar
+        '''Seperate terminal rules'''
         terminal_lhs = ['Aux', 'Det', 'Pronoun', 'Proper-Noun', 'Noun', 'Verb', 'Prep']
         for k in list(self.rules.keys()):
             if k in terminal_lhs:
