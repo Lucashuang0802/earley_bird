@@ -27,8 +27,8 @@ class Rule:
         '''Rules are equal iff both their sides are equal'''
         if self.lhs == other.lhs:
             if self.rhs == other.rhs:
-                return 0
-        return 1
+                return True
+        return False
 
 class Grammar:
     def __init__(self):
@@ -87,5 +87,4 @@ class Grammar:
                 symbols = rhs.split(' ') if rhs else []
                 r = Rule(lhs, symbols)
                 grammar.add_rule(r)
-
         return grammar

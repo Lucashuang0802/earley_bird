@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 # -*- encoding: utf-8 -*-
 
@@ -22,7 +22,6 @@ class Parser:
         return len(self.sentence)
 
     def init_first_chart(self):
-        print('init_first_chart')
         '''Add initial Gamma rule to first chart'''
         row = ChartRow(Rule(Parser.GAMMA_SYMBOL, ['S']), 0, 0, state_name='Dummy start state')
         self.charts[0].add_row(row)
@@ -61,7 +60,6 @@ class Parser:
     def parse(self):
         '''Main Earley's Parser loop'''
         self.init_first_chart()
-
         i = 0
         # we go word by word
         while i < len(self.charts):
@@ -93,7 +91,7 @@ class Parser:
                 rhs = list(row.rule.rhs)
                 rhs.insert(row.dot, '.')
                 rule_str = "{0} -> {1}".format(row.rule.lhs, ' '.join(rhs))
-                row_result = "{0}\t\t\t[{1} {2}]\t{3}".format(rule_str, row.start, i, row.state_name)
+                row_result = "{0}\t\t\t[{1},{2}]\t{3}".format(rule_str, row.start, i, row.state_name)
                 if j == 0:
                     print("Chart[{0}] S{1} {2}".format(i, str(line_number), row_result))
                 else:

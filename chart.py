@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 # -*- encoding: utf-8 -*-
 
@@ -49,8 +49,8 @@ class ChartRow:
             if self.dot == other.dot:
                 if self.start == other.start:
                     if self.rule == other.rule:
-                        return 0
-        return 1
+                        return True
+        return False
 
     def is_complete(self):
         '''Returns true if rule was completely parsed, i.e. the dot is at the end'''

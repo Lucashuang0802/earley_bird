@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 # -*- encoding: utf-8 -*-
 
@@ -8,16 +8,20 @@ from sentence import *
 from parser import *
 from optparse import OptionParser
 import traceback
+from stemmer import *
 
 class MyEarleyParserFileReader:
     @staticmethod
     def readfile(filename):
-        f = open(filename, 'r')
-        file_content = f.read()
-        # remove comments
+        file_handler = open(filename, 'r')
+        for item in Stemmer.stem(file_handler):
+            print(item)
+
+        file_handler.seek(0)
+        file_content = file_handler.read()
         file_content = re.sub(r'\#.*', '', file_content)
         file_content = re.sub(r'(""")\s*.*\s*\1', '', file_content)
-        # file_content = re.sub(r"(''')\s*.*\s*\1", '', file_content)
+        file_content = re.sub(r"(''')\s*.*\s*\1", '', file_content)
 
         # data pre-processing step 1: trim grammar and fetch the sentence
         grammar = Grammar.from_file(file_content)

@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# coding=utf-8
+# -*- encoding: utf-8 -*-
 import re
 
 class Validator:
